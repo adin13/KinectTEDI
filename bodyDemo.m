@@ -40,11 +40,11 @@ title('Depth Source (press q to exit)')
 set(gcf,'keypress','k=get(gcf,''currentchar'');'); % listen keypress
 
 % color stream figure
-c.h = figure;
-c.ax = axes;
-c.im = imshow(color,[]);
-title('Color Source (press q to exit)');
-set(gcf,'keypress','k=get(gcf,''currentchar'');'); % listen keypress
+% c.h = figure;
+% c.ax = axes;
+% c.im = imshow(color,[]);
+% title('Color Source (press q to exit)');
+% set(gcf,'keypress','k=get(gcf,''currentchar'');'); % listen keypress
 %hold on
 
 % Loop until pressing 'q' on any figure
@@ -70,8 +70,8 @@ while true
         %set(d.im,'CData',depth8uc3); 
 
         % update color figure
-        color = imresize(color,COL_SCALE);
-        c.im = imshow(color, 'Parent', c.ax);
+        % color = imresize(color,COL_SCALE);
+        % c.im = imshow(color, 'Parent', c.ax);
 
         %set(c.im,'CData',color); 
 
@@ -115,11 +115,13 @@ while true
             disp(timeStamp);
         
             % To get the joints on depth image space, you can use:
-            pos2D = k2.mapCameraPoints2Depth(bodies(1).Position')
+            %pos2D = k2.mapCameraPoints2Depth(bodies(0).Position')
+            % load('Kin2.m','bonesx')
+            
         end
          
         %To get the joints on color image space, you can use:
-        %pos2D = k2.mapCameraPoints2Color(bodies(1).Position');
+        %pos2D = k2.mapCameraPoints2Color(bodies(0).Position');
 
         % Draw bodies on depth image
         % Parameters: 
@@ -129,10 +131,10 @@ while true
         % 4) Joints' size (circle raddii)
         % 5) Bones' Thickness
         % 6) Hands' Size
-        k2.drawBodies(d.ax,bodies,'depth',5,3,15);
+        k2.drawBodies(d.ax,bodies,'depth',10,3,15);
         
         % Draw bodies on color image
-        k2.drawBodies(c.ax,bodies,'color',10,6,30);
+        %k2.drawBodies(c.ax,bodies,'color',10,6,30);
         
     end
     

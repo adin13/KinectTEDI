@@ -750,28 +750,27 @@ classdef Kin2 < handle
                 
                 % Get the bones: (x1,x2)(y1,y2) of each bone to be drawns
                 % with lines
-                [bonesx, bonesy] = this.getBones(pos2D);                                    
-
+                [bonesx, bonesy] = this.getBones(pos2D, handle,bodies,bonesThickness,handsSize, destination);                                    
+                
                 % Draw the joints
                 viscircles(handle,pos2D,ones(25,1)*jointsSize,'EdgeColor',this.bodyColors(i));
                 %plot(handle,pos2D(:,1),pos2D(:,2), ...
                 %'LineStyle','none','Marker','o','MarkerFaceColor',this.bodyColors(i), ...
                 %'MarkerEdgeColor',this.bodyColors(i),'MarkerSize', jointsSize);
-
-                % Draw the bones
-                for j=1:24                    
-                    line(bonesx(:,j),bonesy(:,j),'Color',this.bodyColors(i), ...
-                        'LineWidth',bonesThickness,'Parent',handle);
-                end
-
+                
                 % Draw the hands
                 this.drawHand(handle, bodies(i).LeftHandState, pos2D(this.JointType_HandLeft,:),handsSize);
                 this.drawHand(handle, bodies(i).RightHandState, pos2D(this.JointType_HandRight,:),handsSize);
                                         
             end
         end
-                
-        function [bonesx, bonesy] = getBones(this,joints)
+        
+        function [coords] = getcoords(this, joints)
+            coords = zeros(1,3)
+            joints(this.JointType_ElbowRight)
+        end
+        
+        function [bonesx, bonesy] = getBones(this,joints, handle,bodies,bonesThickness,handsSize, destination)
             % getBones - get the bones coordinates pair: (x1,x2)(y1,y2). 
             % Get the bones coordinates pair: (x1,x2)(y1,y2)to be drawn
             % with lines.
@@ -837,8 +836,54 @@ classdef Kin2 < handle
             bonesx(:,24) = [joints(this.JointType_AnkleLeft,1); joints(this.JointType_FootLeft,1)];
             bonesy(:,24) = [joints(this.JointType_AnkleLeft,2); joints(this.JointType_FootLeft,2)];                                    
             
+            if ((abs(joints(this.JointType_WristRight,2)-joints(this.JointType_ShoulderRight,2))<25)&&(abs(joints(this.JointType_WristRight,1)-joints(this.JointType_ShoulderRight,1))<40))
+               drawBodiesGreen(this,handle,bodies,bonesThickness,handsSize, bonesx, bonesy, destination)
+               disp('Correct')
+            else
+               disp('Try Again')
+               % Draw the bones
+               for j=1:24                    
+                    line(bonesx(:,j),bonesy(:,j),'Color',this.bodyColors(1), ...
+                        'LineWidth',bonesThickness,'Parent',handle);
+               end
+            end
+            
         end
+        
+        function drawBodiesGreen(this,handle,bodies,bonesThickness,handsSize, bonesx, bonesy, destination)
+            % drawBodies - Draw bodies on depth image
+            % Input Parameters: 
+            % 1) handle: image axes handle
+            % 2) bodies: bodies structure returned by getBodies method
+            % 3) destination: destination image (depth or color)
+            % 4) jointsSize: joints' size (circle raddii)
+            % 5) bonesThickness: Bones' Thickness
+            % 6) handsSize: Hands' Size
+            % Output: none
+            % See bodyDemo.m
+            numBodies = size(bodies,2);
+            
+            % Draw each body
+            for i=1:numBodies                                             
+                if strcmp(destination,'depth')
+                    % Get the joints in depth image space
+                    pos2D = this.mapCameraPoints2Depth(bodies(i).Position');
+                elseif strcmp(destination,'color')
+                    pos2D = this.mapCameraPoints2Color(bodies(i).Position');
+                end
+               
+                for j=1:24                    
+                    line(bonesx(:,j),bonesy(:,j),'Color',this.bodyColors(3), ...
+                        'LineWidth',bonesThickness,'Parent',handle);
+                end
                 
+                % Draw the hands
+                this.drawHand(handle, bodies(i).LeftHandState, pos2D(this.JointType_HandLeft,:),handsSize);
+                this.drawHand(handle, bodies(i).RightHandState, pos2D(this.JointType_HandRight,:),handsSize);
+                                        
+            end
+        end
+        
         function drawHand(this,handle, handState, handPos,size)
             % drawHand - Draw the hand.
             % Input parameters:
@@ -862,6 +907,7 @@ classdef Kin2 < handle
                 %    'LineStyle','none','Marker','o','MarkerFaceColor',color, ...
                  %   'MarkerEdgeColor',color,'MarkerSize', 15);
             end
+             
         end
         
         %% Face Processing
