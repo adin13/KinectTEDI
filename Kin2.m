@@ -838,9 +838,13 @@ classdef Kin2 < handle
             
             if ((abs(joints(this.JointType_WristRight,2)-joints(this.JointType_ShoulderRight,2))<25)&&(abs(joints(this.JointType_WristRight,1)-joints(this.JointType_ShoulderRight,1))<40))
                drawBodiesGreen(this,handle,bodies,bonesThickness,handsSize, bonesx, bonesy, destination)
-               disp('Correct')
+               
+               arduino = serial('COM7','BaudRate',9600);
+               fopen(arduino);
+
+               fclose(arduino);
             else
-               disp('Try Again')
+               
                % Draw the bones
                for j=1:24                    
                     line(bonesx(:,j),bonesy(:,j),'Color',this.bodyColors(1), ...

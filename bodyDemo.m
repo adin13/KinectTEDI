@@ -28,7 +28,7 @@ COL_SCALE = 1.0;
 
 % Create matrices for the images
 depth = zeros(d_height,d_width,'uint16');
-color = zeros(c_height*COL_SCALE,c_width*COL_SCALE,3,'uint8');
+%color = zeros(c_height*COL_SCALE,c_width*COL_SCALE,3,'uint8');
 
 % depth stream figure
 d.h = figure;
@@ -111,8 +111,8 @@ while true
             %disp('Floor Clip Plane')
             %disp(fcp);
             
-            disp('Body Timestamp')
-            disp(timeStamp);
+            %disp('Body Timestamp')
+            %disp(timeStamp);
         
             % To get the joints on depth image space, you can use:
             %pos2D = k2.mapCameraPoints2Depth(bodies(0).Position')
