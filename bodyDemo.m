@@ -32,6 +32,7 @@ depth = zeros(d_height,d_width,'uint16');
 
 % depth stream figure
 d.h = figure;
+set(gcf,'units','normalized','outerposition',[0 0 1 1])
 d.ax = axes;
 d.im = imshow(zeros(d_height,d_width,'uint8'));
 %hold on;
@@ -60,7 +61,7 @@ while true
     if validData
         % Copy data to Matlab matrices
         depth = k2.getDepth;
-        color = k2.getColor;
+        %color = k2.getColor;
 
         % update depth figure
         depth8u = uint8(depth*(255/outOfRange));
@@ -92,7 +93,7 @@ while true
         %   NotTracked=0, Inferred=1, or Tracked=2
         % -LeftHandState: state of the left hand
         % -RightHandState: state of the right hand
-        [bodies, fcp, timeStamp] = k2.getBodies('Quat');        
+        [bodies] = k2.getBodies('Quat');        
         
         % Number of bodies detected
         numBodies = size(bodies,2);

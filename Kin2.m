@@ -835,14 +835,22 @@ classdef Kin2 < handle
             bonesy(:,23) = [joints(this.JointType_KneeLeft,2); joints(this.JointType_AnkleLeft,2)];
             bonesx(:,24) = [joints(this.JointType_AnkleLeft,1); joints(this.JointType_FootLeft,1)];
             bonesy(:,24) = [joints(this.JointType_AnkleLeft,2); joints(this.JointType_FootLeft,2)];                                    
-            
-            if ((abs(joints(this.JointType_WristRight,2)-joints(this.JointType_ShoulderRight,2))<25)&&(abs(joints(this.JointType_WristRight,1)-joints(this.JointType_ShoulderRight,1))<40))
-               drawBodiesGreen(this,handle,bodies,bonesThickness,handsSize, bonesx, bonesy, destination)
+              arduino = serial('COM7','BaudRate',9600);
+            if ((abs(joints(this.JointType_WristRight,2)-joints(this.JointType_ShoulderRight,2))<25)&&(abs(joints(this.JointType_WristRight,1)-joints(this.JointType_ShoulderRight,1))<30))
                
-               arduino = serial('COM7','BaudRate',9600);
-               fopen(arduino);
+                drawBodiesGreen(this,handle,bodies,bonesThickness,handsSize, bonesx, bonesy, destination)
+               
+               
 
+              %send = 1;
+               fopen(arduino);
+               %pause(2);
+               %fprintf(arduino,'%i',send);
+               %fscanf(arduino);
                fclose(arduino);
+               
+
+               
             else
                
                % Draw the bones
